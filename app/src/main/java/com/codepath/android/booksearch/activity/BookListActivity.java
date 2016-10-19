@@ -138,6 +138,12 @@ public class BookListActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_book_list, menu);
         miActionProgressItem = menu.findItem(R.id.miActionProgress);
         miSearch = menu.findItem(R.id.miSearch);
+        setUpSearchView();
+        fetchBooks();
+        return true;
+    }
+
+    private void setUpSearchView() {
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(miSearch);
         int searchEditId = android.support.v7.appcompat.R.id.search_src_text;
         EditText et = (EditText) searchView.findViewById(searchEditId);
@@ -147,6 +153,7 @@ public class BookListActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 searchView.clearFocus();
+                mSearchRequest.setPage(1);
                 mSearchRequest.setQuery(query);
                 fetchBooks();
                 return true;
@@ -157,8 +164,6 @@ public class BookListActivity extends AppCompatActivity {
                 return false;
             }
         });
-        fetchBooks();
-        return true;
     }
 
     @Override

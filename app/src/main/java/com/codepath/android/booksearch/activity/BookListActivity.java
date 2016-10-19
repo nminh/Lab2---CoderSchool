@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.codepath.android.booksearch.R;
 import com.codepath.android.booksearch.adapter.BookAdapter;
 import com.codepath.android.booksearch.api.BookApi;
+import com.codepath.android.booksearch.custom.EndlessScrollListener;
 import com.codepath.android.booksearch.model.Book;
 import com.codepath.android.booksearch.model.SearchRequest;
 import com.codepath.android.booksearch.model.SearchResult;
@@ -67,6 +68,33 @@ public class BookListActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         lvBooks.setAdapter(mBookAdapter);
         lvBooks.setLayoutManager(mLayoutManager);
+        lvBooks.addOnScrollListener(new EndlessScrollListener(mLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                mSearchRequest.setPage(page + 1);
+                fetchMoreBooks();
+            }
+        });
+    }
+
+    private void fetchMoreBooks() {
+        miActionProgressItem.setVisible(true);
+        miSearch.setVisible(false);
+        mBookApi.search(mSearchRequest.toQueryMay()).enqueue(new Callback<SearchResult>() {
+            @Override
+            public void onResponse(Call<SearchResult> call, Response<SearchResult> response) {
+                if (response.body() != null) {
+                    mBookAdapter.addBooks(response.body().getBooks());
+                }
+                handleComplete();
+            }
+
+            @Override
+            public void onFailure(Call<SearchResult> call, Throwable t) {
+                Log.e("Error", t.getMessage());
+                handleComplete();
+            }
+        });
     }
 
     // Executes an API call to the OpenLibrary search endpoint, parses the results

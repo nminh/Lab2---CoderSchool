@@ -18,6 +18,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class BookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private final int FOOTER = 1;
+    private final int ITEM = 0;
     private List<Book> mBooks;
     private Listener mListener;
 
@@ -39,39 +41,67 @@ public class BookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public void addBooks(List<Book> books) {
-        int startPosition = books.size();
+        int startPosition = getItemCount();
         mBooks.addAll(books);
         notifyItemRangeInserted(startPosition, books.size());
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_book, parent, false);
-        return new ViewHolder(itemView);
+        View itemView;
+        switch (viewType) {
+            case FOOTER:
+                itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_loading, parent, false);
+                return new FooterViewHolder(itemView);
+            default:
+                itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_book, parent, false);
+                return new ViewHolder(itemView);
+        }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ViewHolder viewHolder = (ViewHolder) holder;
-        final Book book = mBooks.get(position);
-        viewHolder.tvTitle.setText(book.getTitle());
-        viewHolder.tvAuthor.setText(book.getAuthor());
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) mListener.onItemClick(book);
-            }
-        });
-        Picasso.with(holder.itemView.getContext())
-                .load(book.getCoverUrl())
-                .placeholder(R.drawable.ic_nocover)
-                .into(viewHolder.ivCover);
+        if (holder instanceof ViewHolder) {
+            ViewHolder viewHolder = (ViewHolder) holder;
+            final Book book = mBooks.get(position);
+            viewHolder.tvTitle.setText(book.getTitle());
+            viewHolder.tvAuthor.setText(book.getAuthor());
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) mListener.onItemClick(book);
+                }
+            });
+            Picasso.with(holder.itemView.getContext())
+                    .load(book.getCoverUrl())
+                    .placeholder(R.drawable.ic_nocover)
+                    .into(viewHolder.ivCover);
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == mBooks.size()) {
+            return FOOTER;
+        }
+        return ITEM;
     }
 
     @Override
     public int getItemCount() {
-        return mBooks.size();
+        if (mBooks.size() > 0) {
+            return mBooks.size() + 1;
+        }
+        return 0;
+    }
+
+    public class FooterViewHolder extends RecyclerView.ViewHolder {
+
+        public FooterViewHolder(View itemView) {
+            super(itemView);
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,9 +27,13 @@ public class BookListActivity extends AppCompatActivity {
     private BookAdapter mBookAdapter;
     private BookApi mBookApi;
     private LinearLayoutManager mLayoutManager;
+    private MenuItem miActionProgressItem;
 
     @BindView(R.id.lvBooks)
     RecyclerView lvBooks;
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +42,6 @@ public class BookListActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setUpApi();
         setUpViews();
-        fetchBooks();
     }
 
     private void setUpApi() {
@@ -46,6 +50,7 @@ public class BookListActivity extends AppCompatActivity {
     }
 
     private void setUpViews() {
+        setSupportActionBar(toolbar);
         mBookAdapter = new BookAdapter();
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         lvBooks.setAdapter(mBookAdapter);
@@ -55,10 +60,12 @@ public class BookListActivity extends AppCompatActivity {
     // Executes an API call to the OpenLibrary search endpoint, parses the results
     // Converts them into an array of book objects and adds them to the adapter
     private void fetchBooks() {
+        miActionProgressItem.setVisible(true);
         mBookApi.search(mSearchRequest.toQueryMay()).enqueue(new Callback<SearchResult>() {
             @Override
             public void onResponse(Call<SearchResult> call, Response<SearchResult> response) {
                 handleResponse(response.body());
+                miActionProgressItem.setVisible(false);
             }
 
             @Override
@@ -76,6 +83,8 @@ public class BookListActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_book_list, menu);
+        miActionProgressItem = menu.findItem(R.id.miActionProgress);
+        fetchBooks();
         return true;
     }
 

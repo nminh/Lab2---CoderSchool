@@ -4,8 +4,15 @@
     android:layout_height="match_parent"
     tools:context=".activity.BookListActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#BDBDBD" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/lvBooks"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar" />
 </RelativeLayout>

@@ -1,6 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".BookSearchActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.BookListActivity">
+
+    <item
+        android:id="@+id/miActionProgress"
+        android:orderInCategory="100"
+        android:title="Loading..."
+        android:visible="false"
+        app:actionLayout="@layout/action_view_progress"
+        app:showAsAction="always" />
 </menu>

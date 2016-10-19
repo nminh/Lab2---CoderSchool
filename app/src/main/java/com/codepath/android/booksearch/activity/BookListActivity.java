@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.codepath.android.booksearch.R;
 import com.codepath.android.booksearch.adapter.BookAdapter;
 import com.codepath.android.booksearch.api.BookApi;
+import com.codepath.android.booksearch.custom.DividerItemDecoration;
 import com.codepath.android.booksearch.custom.EndlessScrollListener;
 import com.codepath.android.booksearch.model.Book;
 import com.codepath.android.booksearch.model.SearchRequest;
@@ -25,6 +26,7 @@ import com.codepath.android.booksearch.utils.RetrofitUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -66,7 +68,9 @@ public class BookListActivity extends AppCompatActivity {
             }
         });
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        lvBooks.setAdapter(mBookAdapter);
+        lvBooks.setAdapter(new SlideInBottomAnimationAdapter(mBookAdapter));
+        lvBooks.addItemDecoration(new DividerItemDecoration(this,
+                DividerItemDecoration.VERTICAL_LIST));
         lvBooks.setLayoutManager(mLayoutManager);
         lvBooks.addOnScrollListener(new EndlessScrollListener(mLayoutManager) {
             @Override

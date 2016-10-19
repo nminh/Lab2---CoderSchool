@@ -12,10 +12,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.codepath.android.booksearch.R;
 import com.codepath.android.booksearch.adapter.BookAdapter;
 import com.codepath.android.booksearch.api.BookApi;
+import com.codepath.android.booksearch.model.Book;
 import com.codepath.android.booksearch.model.SearchRequest;
 import com.codepath.android.booksearch.model.SearchResult;
 import com.codepath.android.booksearch.utils.RetrofitUtils;
@@ -56,6 +58,12 @@ public class BookListActivity extends AppCompatActivity {
     private void setUpViews() {
         setSupportActionBar(toolbar);
         mBookAdapter = new BookAdapter();
+        mBookAdapter.setListener(new BookAdapter.Listener() {
+            @Override
+            public void onItemClick(Book book) {
+                Toast.makeText(BookListActivity.this, book.getTitle(), Toast.LENGTH_SHORT).show();
+            }
+        });
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         lvBooks.setAdapter(mBookAdapter);
         lvBooks.setLayoutManager(mLayoutManager);

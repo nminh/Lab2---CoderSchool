@@ -19,9 +19,18 @@ import butterknife.ButterKnife;
 
 public class BookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Book> mBooks;
+    private Listener mListener;
+
+    public interface Listener {
+        void onItemClick(Book book);
+    }
 
     public BookAdapter() {
         this.mBooks = new ArrayList<>();
+    }
+
+    public void setListener(Listener istener) {
+        mListener = istener;
     }
 
     public void setBooks(List<Book> books) {
@@ -45,9 +54,15 @@ public class BookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ViewHolder viewHolder = (ViewHolder) holder;
-        Book book = mBooks.get(position);
+        final Book book = mBooks.get(position);
         viewHolder.tvTitle.setText(book.getTitle());
         viewHolder.tvAuthor.setText(book.getAuthor());
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) mListener.onItemClick(book);
+            }
+        });
         Picasso.with(holder.itemView.getContext())
                 .load(book.getCoverUrl())
                 .placeholder(R.drawable.ic_nocover)

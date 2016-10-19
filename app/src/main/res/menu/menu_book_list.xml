@@ -9,5 +9,12 @@
         android:title="Loading..."
         android:visible="false"
         app:actionLayout="@layout/action_view_progress"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/miSearch"
+        android:icon="@drawable/ic_search"
+        android:title="Search..."
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="always|collapseActionView" />
 </menu>

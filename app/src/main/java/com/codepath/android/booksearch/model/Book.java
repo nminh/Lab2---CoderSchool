@@ -33,7 +33,10 @@ public class Book {
     }
 
     public String getAuthor() {
-        return TextUtils.join(", ", authors);
+        if (authors != null) {
+            return TextUtils.join(", ", authors);
+        }
+        return "No author";
     }
 
     public String getCoverUrl() {

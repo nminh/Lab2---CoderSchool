@@ -1,13 +1,17 @@
 package com.codepath.android.booksearch.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 import com.codepath.android.booksearch.R;
 import com.codepath.android.booksearch.adapter.BookAdapter;
@@ -27,7 +31,7 @@ public class BookListActivity extends AppCompatActivity {
     private BookAdapter mBookAdapter;
     private BookApi mBookApi;
     private LinearLayoutManager mLayoutManager;
-    private MenuItem miActionProgressItem;
+    private MenuItem miActionProgressItem, miSearch;
 
     @BindView(R.id.lvBooks)
     RecyclerView lvBooks;
@@ -61,22 +65,31 @@ public class BookListActivity extends AppCompatActivity {
     // Converts them into an array of book objects and adds them to the adapter
     private void fetchBooks() {
         miActionProgressItem.setVisible(true);
+        miSearch.setVisible(false);
         mBookApi.search(mSearchRequest.toQueryMay()).enqueue(new Callback<SearchResult>() {
             @Override
             public void onResponse(Call<SearchResult> call, Response<SearchResult> response) {
                 handleResponse(response.body());
-                miActionProgressItem.setVisible(false);
+                handleComplete();
             }
 
             @Override
             public void onFailure(Call<SearchResult> call, Throwable t) {
                 Log.e("Error", t.getMessage());
+                handleComplete();
             }
         });
     }
 
+    private void handleComplete() {
+        miActionProgressItem.setVisible(false);
+        miSearch.setVisible(true);
+    }
+
     private void handleResponse(SearchResult searchResult) {
-        mBookAdapter.setBooks(searchResult.getBooks());
+        if (searchResult != null) {
+            mBookAdapter.setBooks(searchResult.getBooks());
+        }
     }
 
     @Override
@@ -84,6 +97,26 @@ public class BookListActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_book_list, menu);
         miActionProgressItem = menu.findItem(R.id.miActionProgress);
+        miSearch = menu.findItem(R.id.miSearch);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(miSearch);
+        int searchEditId = android.support.v7.appcompat.R.id.search_src_text;
+        EditText et = (EditText) searchView.findViewById(searchEditId);
+        et.setHint("Search...");
+        et.setHintTextColor(Color.parseColor("#50FFFFFF"));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
+                mSearchRequest.setQuery(query);
+                fetchBooks();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
         fetchBooks();
         return true;
     }

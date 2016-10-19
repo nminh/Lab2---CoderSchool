@@ -4,6 +4,8 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">#212121</item>
         <item name="colorPrimaryDark">#000000</item>
+        <item name="android:textColorSecondary">#FFFFFF</item>
+        <item name="android:editTextColor">@android:color/white</item>
         <!-- Customize your theme here. -->
     </style>
 

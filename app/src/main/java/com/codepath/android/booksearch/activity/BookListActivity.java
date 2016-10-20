@@ -37,7 +37,6 @@ public class BookListActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setUpApi();
         setUpViews();
-        fetchBooks();
     }
 
     private void setUpApi() {
@@ -94,5 +93,11 @@ public class BookListActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        fetchBooks();
+        return super.onPrepareOptionsMenu(menu);
     }
 }

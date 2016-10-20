@@ -138,8 +138,6 @@ public class BookListActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_book_list, menu);
         miActionProgressItem = menu.findItem(R.id.miActionProgress);
         miSearch = menu.findItem(R.id.miSearch);
-        setUpSearchView();
-        fetchBooks();
         return true;
     }
 
@@ -155,7 +153,6 @@ public class BookListActivity extends AppCompatActivity {
                 searchView.clearFocus();
                 mSearchRequest.setPage(1);
                 mSearchRequest.setQuery(query);
-                fetchBooks();
                 return true;
             }
 
@@ -179,5 +176,12 @@ public class BookListActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        setUpSearchView();
+        fetchBooks();
+        return super.onPrepareOptionsMenu(menu);
     }
 }

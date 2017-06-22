@@ -59,6 +59,8 @@ public class BookListActivity extends AppCompatActivity {
             public void onResponse(Call<SearchResult> call, Response<SearchResult> response) {
                 if (response.body() != null) {
                     handleResponse(response.body());
+                    mBookAdapter.addBooks(response.body().getBooks());
+                    mBookAdapter.notifyDataSetChanged();
                 }
             }
 

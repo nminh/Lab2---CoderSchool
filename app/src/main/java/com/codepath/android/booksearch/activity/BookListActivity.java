@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +31,9 @@ public class BookListActivity extends AppCompatActivity {
     @BindView(R.id.lvBooks)
     RecyclerView lvBooks;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +53,8 @@ public class BookListActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         lvBooks.setAdapter(mBookAdapter);
         lvBooks.setLayoutManager(mLayoutManager);
+
+        setSupportActionBar(toolbar);
     }
 
     // Executes an API call to the OpenLibrary search endpoint, parses the results
